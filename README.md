@@ -1,47 +1,81 @@
 # Sprint-Name-Generator
-[Sprint Name Generator](https://sprintnamegenerator.com)
-
-Originally built by: 
-- [Florian Stadler](https://github.com/flostadler) - Go -> Wasm
-- [Wolfgang Ederer](https://github.com/wederer) - Frontend
-
-With support from following contributors:
-- [Kris - The Coding Unicorn](https://github.com/guidemetothemoon)
+Clone and follow the instructions below to run a local instance of Sprint-Name-Generator app.
 
 ## Usage
 
-### Build the image locally
+### docker-compose.sh
 
-You will need to run a few commands to get necessary files generated.
+This script can be used to build and deploy the blue and green version of the app.
+It uses a docker-compose file to build and run the docker containers. 
 
-1. Set environment variables:
+usage: `docker-compose.sh <param>`
 
-* `GOROOT=[path to Go installation folder]`
-* `GOOS=js`
-* `GOARCH=wasm`
+1. After cloning the repo, change the working directory
 
-2. Run below commands:
+`cd sprint-name-generator`
+
+
+2. To deploy blue version - run below command:
 
 ``` bash
-go build -o web/generator.wasm cmd/web
-cp $GOROOT/misc/wasm/wasm_exec.js web/wasm_exec.js
-cd web
-npm install
-npm run build --if-present
-
-docker build -t sprint-name-generator -f build/package/Dockerfile .
+$ ./docker-compose.sh blue
 ```
+- After successful run you should see something like
+```
+.
+.
+Blue is deployed!
+```
+- Running docker containers can be verified as 
 
-3. Start the container: 
+```
+$ docker ps
+CONTAINER ID   IMAGE                        COMMAND                  CREATED          STATUS          PORTS                  NAMES
+094fe210eda1   nginx                        "/docker-entrypoint.ΓÇª"   26 seconds ago   Up 22 seconds   0.0.0.0:8080->80/tcp   sprint-name-generator-proxy-1
+3e11b5037256   sprint-name-generator_blue   "/docker-entrypoint.ΓÇª"   26 seconds ago   Up 24 seconds   80/tcp                 sprint-name-generator-blue-1
+```
+- Go to browser and type the following to make sure its working as expected.
+`http://localhost:8080`
+![img.png](img.png)
 
-`docker run -dp 3000:80 sprint-name-generator:latest`
+3. To make a visible change in code, run the below command.
 
-### Run latest image from Docker Hub
+```
+$ sed -i 's/PICK A CATEGORY/PICK A CHARACTER/g' web/src/index.js
+```
+4. To deploy new (say green) version of the app - run below command:
 ``` bash
-docker pull flostadler/sprint-name-generator:[image_tag]
-docker run -dp 3006:80  flostadler/sprint-name-generator:[image_tag]
+$ ./docker-compose.sh green
 ```
+- After successful run you should see something like
+```
+.
+.
+Green is deployed successfully!
+```
+- Running docker containers can be verified as
 
-## Images
+```
+$ docker ps
+CONTAINER ID   IMAGE                         COMMAND                  CREATED              STATUS              PORTS                  NAMES
+8eec96b35cd4   sprint-name-generator_green   "/docker-entrypoint.ΓÇª"   About a minute ago   Up About a minute   80/tcp                 sprint-name-generator-green-1
+fc757d0de78c   nginx                         "/docker-entrypoint.ΓÇª"   16 minutes ago       Up 16 minutes       0.0.0.0:8080->80/tcp   sprint-name-generator-proxy-1
+ce56db4e8066   sprint-name-generator_blue    "/docker-entrypoint.ΓÇª"   16 minutes ago       Up 16 minutes       80/tcp                 sprint-name-generator-blue-1
+```
+- Go to browser and do a refresh to see any change.
 
-Original prebuilt image available at [Dockerhub](https://hub.docker.com/r/flostadler/name-generator)
+    `No change observed?`
+
+- Wait! we haven't re-routed the traffic to the new deployment yet. 
+To do that now run the following script:
+
+    `./reload-nginx.sh`
+- Now go back to browser once again and do a refresh to see the change ;-)
+
+  ![img_1.png](img_1.png)
+
+_Note: In a live environment we can keep running the old deployment as it is until the new deployment is fully tested._
+
+
+
+

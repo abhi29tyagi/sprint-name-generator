@@ -1,0 +1,6 @@
+services:
+  green:
+    build:
+      context: .
+      target: web
+    hostname: green

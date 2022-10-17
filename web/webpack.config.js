@@ -48,9 +48,10 @@ module.exports = {
             template: 'index.template.html',
             hash: true,
         }),
-        new CopyWebpackPlugin([
+        new CopyWebpackPlugin(
+            {patterns:[
             { from: 'generator.wasm', to: 'generator.wasm' },
             { from: 'wasm_exec.js', to: 'wasm_exec.js' },
-        ]),
+        ]}),
     ],
 };

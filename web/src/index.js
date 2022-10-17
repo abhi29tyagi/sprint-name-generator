@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if(!queue.length){
                 addToQueue([
                     {
-                        text: "PICK A CATEGORY",
+                        text: "PICK A CHARACTER",
                         animationDurationMs: 500,
                     },
                 ]);
