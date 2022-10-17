@@ -10,7 +10,7 @@ It uses a docker-compose file to build and run the docker containers.
 
 usage: `docker-compose.sh <param>`
 
-1. After cloning the repo, change the working directory
+1. Once you have cloned repo, change the working directory
 
 `cd sprint-name-generator`
 
@@ -26,7 +26,7 @@ $ ./docker-compose.sh blue
 .
 Blue is deployed!
 ```
-- Running docker containers can be verified as 
+- Running docker containers can be seen as 
 
 ```
 $ docker ps
@@ -36,7 +36,7 @@ CONTAINER ID   IMAGE                        COMMAND                  CREATED    
 ```
 - Go to browser and type the following to make sure its working as expected.
 `http://localhost:8080`
-![img.png](img.png)
+![img.png](blue.png)
 
 3. To make a visible change in code, run the below command.
 
@@ -53,7 +53,7 @@ $ ./docker-compose.sh green
 .
 Green is deployed successfully!
 ```
-- Running docker containers can be verified as
+- New running docker containers can be seen again as
 
 ```
 $ docker ps
@@ -62,17 +62,16 @@ CONTAINER ID   IMAGE                         COMMAND                  CREATED   
 fc757d0de78c   nginx                         "/docker-entrypoint.ΓÇª"   16 minutes ago       Up 16 minutes       0.0.0.0:8080->80/tcp   sprint-name-generator-proxy-1
 ce56db4e8066   sprint-name-generator_blue    "/docker-entrypoint.ΓÇª"   16 minutes ago       Up 16 minutes       80/tcp                 sprint-name-generator-blue-1
 ```
-- Go to browser and do a refresh to see any change.
+5. Now, go to browser and do a refresh to see any change.
 
     `No change observed?`
 
-- Wait! we haven't re-routed the traffic to the new deployment yet. 
-To do that now run the following script:
+- Wait! we haven't re-routed the traffic to the new deployment yet. To do that run the following script:
 
     `./reload-nginx.sh`
-- Now go back to browser once again and do a refresh to see the change ;-)
+- Go back to browser once again and do a refresh to see the change ;-)
 
-  ![img_1.png](img_1.png)
+  ![img_1.png](green.png)
 
 _Note: In a live environment we can keep running the old deployment as it is until the new deployment is fully tested._
 
